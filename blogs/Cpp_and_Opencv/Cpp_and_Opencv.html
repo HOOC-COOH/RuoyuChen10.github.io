@@ -17,6 +17,8 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
     <!-- Fancybox-->
     <link rel="stylesheet" href="../../vendor/@fancyapps/fancybox/jquery.fancybox.min.css">
+    <!-- Custom stylesheet - for your changes-->
+    <link rel="stylesheet" href="../../css/custom.css">
     <!-- Favicon-->
     <link rel="shortcut icon" href="favicon.png">
     <!-- Tweaks for older IEs--><!--[if lt IE 9]>
@@ -847,28 +849,13 @@ vertical-align:1px;
 
 <body>
 
-<header class="header">
+    <header class="header">
       <!-- Main Navbar-->
       <nav class="navbar navbar-expand-lg">
-        <div class="search-area">
-          <div class="search-area-inner d-flex align-items-center justify-content-center">
-            <div class="close-btn"><i class="icon-close"></i></div>
-            <div class="row d-flex justify-content-center">
-              <div class="col-md-8">
-                <form action="#">
-                  <div class="form-group">
-                    <input type="search" name="search" id="search" placeholder="What are you looking for?">
-                    <button type="submit" class="submit"><i class="icon-search-1"></i></button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
         <div class="container">
           <!-- Navbar Brand -->
           <div class="navbar-header d-flex align-items-center justify-content-between">
-            <!-- Navbar Brand --><a href="#" class="navbar-brand"><font size="6" color="blue" face="Times">CExplorer</font></a>
+            <!-- Navbar Brand --><a href="../../index.html" class="navbar-brand"><font size="6" color="blue" face="Times">CExplorer</font></a>
             <!-- Toggle Button-->
             <button type="button" data-toggle="collapse" data-target="#navbarcollapse" aria-controls="navbarcollapse" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"><span></span><span></span><span></span></button>
           </div>
@@ -883,11 +870,9 @@ vertical-align:1px;
               </li>
               <li class="nav-item"><a href="#" class="nav-link ">Datasets</a>
               </li>
-			  <li class="nav-item"><a class="nav-link active ">Blog</a>
+			  <li class="nav-item"><a href="../../blog.html" class="nav-link active ">Blog</a>
               </li>
             </ul>
-            <div class="navbar-text"><a href="#" class="search-btn"><i class="icon-search-1"></i></a></div>
-            <ul class="langs navbar-text"><a class="active">English</a><span>           </span><a href="index_CN.html">中文</a></ul>
           </div>
         </div>
       </nav>
@@ -903,7 +888,7 @@ vertical-align:1px;
 <hr>
 <h2 id="0-">0. 常用库</h2>
 <pre class="prettyprint lang-c">
-#include < iostream>  
+#include < iostream>
 #include < opencv2/core/core.hpp>  
 #include < opencv2/highgui/highgui.hpp>  
 #include < opencv2/opencv.hpp>
@@ -921,9 +906,10 @@ vertical-align:1px;
 </blockquote>
 <ul>
 <li>不含命名空间格式：</li></ul>
-<pre class="prettyprint lang-c++">
-#include < iostream>  
-#include < opencv2/core/core.hpp>  
+<pre class="prettyprint lang-c++" white-space: pre-wrap;>
+
+#include < iostream> 
+#include < opencv2/core/core.hpp> 
 #include < opencv2/highgui/highgui.hpp>
 #include < opencv2/opencv.hpp>
 #include < opencv2/imgproc.hpp>  

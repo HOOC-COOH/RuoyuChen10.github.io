@@ -2576,3 +2576,8 @@ a.text-light:focus, a.text-light:hover {
 a.text-dark:focus, a.text-dark:hover {
   color: #1d2124 !important;
 }
+
+pre{
+white-space: normal;           /* css-3 */
+word-wrap: break-word;           /* Internet Explorer 5.5+ */
+}
