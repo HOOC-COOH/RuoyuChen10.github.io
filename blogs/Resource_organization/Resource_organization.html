@@ -1,0 +1,512 @@
+<html>
+<head>
+  <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ruoyu Chen</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="all,follow">
+    <!-- Bootstrap CSS-->
+    <link rel="stylesheet" href="../../vendor/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome CSS-->
+    <link rel="stylesheet" href="../../vendor/font-awesome/css/font-awesome.min.css">
+    <!-- Custom icon font-->
+    <link rel="stylesheet" href="../../css/fontastic.css">
+    <!-- Google fonts - Open Sans-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
+    <!-- Fancybox-->
+    <link rel="stylesheet" href="../../vendor/@fancyapps/fancybox/jquery.fancybox.min.css">
+    <!-- Custom stylesheet - for your changes-->
+    <link rel="stylesheet" href="../../css/custom.css">
+    <!-- Favicon-->
+    <link rel="shortcut icon" href="favicon.png">
+</head>
+
+<meta http-equiv="Expires" content="0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-control" content="no-cache">
+<meta http-equiv="Cache" content="no-cache">
+
+<link href="https://cdn.bootcss.com/prettify/r298/prettify.css" rel="stylesheet">
+<link href="https://cdn.bootcss.com/prettify/r298/prettify.min.css" rel="stylesheet"> 
+<script src="https://cdn.bootcss.com/prettify/r298/prettify.min.js"></script>
+<script>
+	window.onload=function(){
+		//load
+		prettyPrint();
+	}
+	</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+
+<script type="text/javascript">
+    function wrapOldContentByDiv() {
+        var oldContentDiv = document.createElement("div");
+        oldContentDiv.style.cssText = "float:right; width:72%; padding-left: 3%; padding-right:3%;border: 2px solid #CACACA;";
+        oldContentDiv.innerHTML = document.body.innerHTML;
+        document.body.style["max-width"] = "100%";
+        document.body.style["margin"] = "20px";
+        document.body.style["padding"] = "0";
+        document.body.innerHTML = '';
+        document.body.appendChild(oldContentDiv);
+    };
+
+    function addDirectorySwitch(directoryDiv) {
+        var directorySwitchP = document.createElement("p");
+        directorySwitchP.style.cssText = "text-align: left; margin: 0;";
+        directoryDiv.appendChild(directorySwitchP);
+
+        var ele_span = document.createElement("span");
+        ele_span.style.cssText = "font-weight: 1000;";
+        var ele_text = document.createTextNode("目录");
+        ele_span.appendChild(ele_text);
+
+        var ele_a = document.createElement("a");
+        ele_a.appendChild(document.createTextNode("[-]"));
+        ele_a.setAttribute("href", "#");
+        ele_a.setAttribute("onclick", "javascript:return switchAllDirectory(this);");
+        ele_a.setAttribute("title", "Click to Open TOC");
+
+        ele_span.appendChild(ele_a);
+        directorySwitchP.appendChild(ele_span);
+    }
+
+    function createTree(parentNode, tags, index, maxLevel) {
+        if (index >= tags.length) {
+            return -1;
+        }
+
+        var lastLevel = -1;
+        for (var i = index; i < tags.length; i++) {
+            var header = tags[i];
+            var level = parseInt(header.tagName.substr(1), 10);
+
+            var childNode = {'tag': header, 'childNodes': [], 'level': level};
+            if (level > parentNode.level) {
+                if (lastLevel > 0 && level > lastLevel) {
+                    // 子子类
+                    index = createTree(parentNode.childNodes[parentNode.childNodes.length - 1], tags, i);
+                    if (index < 0) {
+                        return -1;
+                    } else {
+                        i = index - 1;
+                    }
+                } else {
+                    parentNode.childNodes.push(childNode);
+                    lastLevel = level;
+                }
+            } else if (level <= maxLevel && parentNode.level > maxLevel) {
+                parentNode.childNodes.push(childNode);
+                lastLevel = level;
+            } else {
+                return i;
+            }
+        }
+    }
+
+    function createAElement(tag, index) {
+        var a = document.createElement("a");
+        a.style.cssText = "";
+        a.setAttribute("href", "#" + tag.textContent);
+        a.innerHTML = index.toString() + tag.textContent;
+        return a;
+    }
+
+    function createOlElement() {
+        var ol_el = document.createElement("ol");
+        ol_el.style["line-height"] = "180%";
+        ol_el.style["list-style-type"] = "none";
+        ol_el.style["margin-left"] = "0";
+        return ol_el
+    }
+
+    function createEmptyLiElement() {
+        var emptyLiEle = document.createElement("li");
+        return emptyLiEle
+    }
+
+    function getIndex(parentDirectory, directoryLevel, index) {
+        if (directoryLevel === 0) {
+            return parentDirectory + (index + 1).toString() + "."
+        } else {
+            return parentDirectory + (index + 1).toString() + ".";
+        }
+    }
+
+    function createLeafElement(node, curDirectory) {
+        var liEle = createEmptyLiElement();
+        var aEle = createAElement(node.tag, curDirectory);
+        liEle.appendChild(aEle);
+        return liEle
+    }
+
+    function getArrowDownStyle() {
+        return " width: 0;" +
+            "    height: 0;" +
+            "    position: relative;" +
+            "    margin-right: 8px;" +
+            "    top: 3px;" +
+            "    display: inline-block;" +
+            "    border: 6px outset;" +
+            "    border-color: black transparent transparent transparent;"
+    }
+
+    function getArrowRightStyle() {
+        return " width: 0;" +
+            "    height: 0;" +
+            "    left: 5px;" +
+            "    position: relative;" +
+            "    margin-right: 8px;" +
+            "    display: inline-block;" +
+            "    border: 6px solid;" +
+            "    border-color: transparent transparent transparent black;"
+    }
+
+    /*
+    <ol>
+        <li><a>根节点1</a></li>
+        <li><a>根节点2</a></li>
+        <li>
+            <div>
+                <a><span>[-]</span>根节点3</a>
+                <ol>
+                    <li><a>子节点1</a></li>
+                    <li><a>子节点2</a></li>
+                    <li><a>子节点3</a></li>
+                </ol>
+            </div>
+        </li>
+        <li><a>根节点4</a></li>
+     </ol>
+    * */
+    // node, 1.2.3 4 0
+    function renderTree(node, parentDirectory, directoryLevel, index) {
+        var childNodes = node.childNodes;
+        var tagContent = node.tag.textContent;
+
+        node.tag.setAttribute("id", tagContent);
+
+        var curDirectory = getIndex(parentDirectory, directoryLevel, index);
+        var directoryName = curDirectory + "&nbsp;" + tagContent;
+
+        // 叶子节点
+        if (childNodes.length === 0) {
+            return "<li style='padding-left: 24px;'><a href='#" + tagContent + "'>" + directoryName + "</a></li>"
+    //                return createLeafElement(node, curDirectory)
+        }
+
+        // 非叶子节点
+        var childContent = "";
+        for (var j = 0; j < node.childNodes.length; j++) {
+            childContent += renderTree(node.childNodes[j], curDirectory, directoryLevel + 1, j);
+        }
+
+        return "<li>" +
+            "   <div>" +
+            "      <div>" +
+            "         <div id='" + directoryName + "' class='open' style='" + getArrowDownStyle() + "' onclick='return switchDirectory(this);'></div>" +
+            "         <a href='#" + tagContent + "' ondblclick='return switchByDbClick(this);'>" + directoryName + "</a>" +
+            "      </div>" +
+            "      <ol id='ol-" + directoryName + "' style='line-height: 180%;list-style-type: none; padding-left: 20px;'>" + childContent + "</ol>" +
+            "   </div>" +
+            "</li>";
+
+        /*var liEle = createEmptyLiElement();
+        var aEle = createAElement(node.tag, curDirectory);
+
+        var parentElement = document.createElement("div");
+        parentElement.appendChild(aEle);
+
+        var olElement = createOlElement();
+
+        var tempNode;
+        for (var j = 0; j < node.childNodes.length; j++) {
+            tempNode = node.childNodes[j];
+            var element = renderTree(tempNode, curDirectory, directoryLevel + 1, j);
+            olElement.appendChild(element);
+        }
+        parentElement.appendChild(olElement);
+
+        liEle.appendChild(parentElement);
+        return liEle;*/
+    }
+
+    function switchByDbClick(aEle) {
+        switchDirectory(aEle.parentElement().firstChild)
+    }
+
+    // 开关目录
+    function switchDirectory(ele) {
+        var divEle = ele.parentNode.parentNode;
+        var olEle = divEle.lastElementChild;
+        if (ele.className === "open") {
+            // 关闭
+            olEle.style.cssText = "display:none;line-height: 180%;list-style-type: none; padding-left: 20px";
+            ele.setAttribute("class", "close");
+            ele.style.cssText = getArrowRightStyle();
+        } else if (ele.className === "close") {
+            // 打开
+            olEle.style.cssText = "line-height: 180%;list-style-type: none; padding-left: 20px";
+            ele.setAttribute("class", "open");
+            ele.style.cssText = getArrowDownStyle();
+        }
+    }
+
+    function switchAllDirectory(e) {
+        var rootOlElement = document.getElementById("outline_ol");
+        var ols = rootOlElement.getElementsByTagName("ol");
+        var isOpen = false;
+
+        if (e.innerHTML === '[+]') {
+            e.setAttribute('title', 'collapse');
+            e.innerHTML = '[-]';
+            isOpen = true;
+        } else {
+            e.setAttribute('title', 'expand');
+            e.innerHTML = '[+]';
+        }
+
+
+        for (var i = 0; i < ols.length; i++) {
+            var olEle = ols[i];
+            if (isOpen) {
+                olEle.style.display = "block";
+                olEle.parentNode.firstElementChild.firstElementChild.style.cssText = getArrowDownStyle();
+            } else {
+                olEle.style.display = "none";
+                olEle.parentNode.firstElementChild.firstElementChild.style.cssText = getArrowRightStyle();
+            }
+        }
+
+        e.blur();
+        return false;
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        // 1, 将body内容提取到div标签中
+        wrapOldContentByDiv();
+
+        // 2, 创建左边目录列表Div
+        var directoryDiv = document.createElement("div");
+        directoryDiv.setAttribute("id", "outline-list");
+        directoryDiv.style.cssText = "width:20%;height:100%; float:left;font-size:16px,z-index:1;position: fixed;overflow: hidden;";
+
+        // 3, 目录展开折叠开关
+        addDirectorySwitch(directoryDiv);
+
+        // 4, 创建目录列表
+        var directoryOl = document.createElement("ol");
+        directoryOl.style.cssText = "padding-left:14px;line-height:180%;list-style-type:none;height: 85%;padding-bottom: 30px; overflow: auto;";
+        directoryOl.setAttribute("id", "outline_ol");
+        directoryDiv.appendChild(directoryOl);
+        var div1 = document.createElement("div");
+        div1.style.cssText = "clear:both";
+
+        // 插入目录
+        document.body.insertBefore(directoryDiv, document.body.childNodes[0]);
+
+        // 5, 获取所有的H标签
+        var hTags = document.querySelectorAll('h1,h2,h3,h4,h5,h6');
+        if (hTags.length < 2)
+            return;
+
+        var rootNode = {'tag': directoryOl, 'childNodes': [], 'level': 0};
+        var maxLevel = parseInt(hTags[0].tagName.substr(1), 10);
+        // 6, 创建树形结构
+        createTree(rootNode, hTags, 0, maxLevel);
+
+        // 7, 绘制树结构
+        var htmlContent = "";
+        for (var j = 0; j < rootNode.childNodes.length; j++) {
+    //                var element = renderTree(rootNode.childNodes[j], '', 1, j);
+    //                directoryOl.appendChild(element);
+
+            htmlContent += renderTree(rootNode.childNodes[j], '', 1, j);
+        }
+        directoryOl.innerHTML = htmlContent;
+    });
+</script>
+</head>
+<header class="header">
+      <!-- Main Navbar-->
+      <nav class="navbar navbar-expand-lg">
+        <div class="container">
+          <!-- Navbar Brand -->
+          <div class="navbar-header d-flex align-items-center justify-content-between">
+            <!-- Navbar Brand --><a href="../../index.html" class="navbar-brand"><font size="6" color="blue" face="Times">CExplorer</font></a>
+            <!-- Toggle Button-->
+            <button type="button" data-toggle="collapse" data-target="#navbarcollapse" aria-controls="navbarcollapse" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"><span></span><span></span><span></span></button>
+          </div>
+          <!-- Navbar Menu -->
+          <div id="navbarcollapse" class="collapse navbar-collapse">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item"><a href="../../index.html" class="nav-link ">Home</a>
+              </li>
+              <li class="nav-item"><a href="#" class="nav-link ">Research</a>
+              </li>
+              <li class="nav-item"><a href="#" class="nav-link ">Publications</a>
+              </li>
+              <li class="nav-item"><a href="#" class="nav-link ">Datasets</a>
+              </li>
+			  <li class="nav-item"><a href="../../blog.html" class="nav-link active ">Blog</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+<body>
+<a name="676"/>
+
+<div><span><div style="font-size: 14px; margin: 0; padding: 0; width: 100%;"><h1 style="line-height: 160%; box-sizing: content-box; font-weight: 700; font-size: 41px; border-bottom: 3px double #999; color: #000; margin-top: 14px;"><center>宝藏资源整理</center></h1>
+<blockquote style="line-height: 160%; box-sizing: content-box; margin: 15px 0; border-left: 4px solid #ddd; padding: 0 15px; color: #777;">
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333; margin-top: 0; margin-bottom: 0;">陈若愚整理<br/>
+email: 2389388826@qq.com</p>
+</blockquote>
+<h2 style="line-height: 160%; box-sizing: content-box; font-weight: 700; font-size: 34px; border-bottom: 1px solid #dbdbdb; color: #333;">1.先进的论文网站</h2>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;">地址：<a href="https://paperswithcode.com/sota" style="line-height: 160%; box-sizing: content-box; text-decoration: underline; color: #5286bc;">https://paperswithcode.com/sota</a></p>
+<blockquote style="line-height: 160%; box-sizing: content-box; margin: 15px 0; border-left: 4px solid #ddd; padding: 0 15px; color: #777;">
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333; margin-top: 0; margin-bottom: 0;">该网站有较为先进的论文与代码的汇总，分很多类，例如图深度学习、图像分割、生物医学图像等等。</p>
+</blockquote>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;"><img src="Resource_organization_files/Brose_state_of_art.png" type="image/png" data-filename="Brose_state_of_art.png"/></p>
+<h2 style="line-height: 160%; box-sizing: content-box; font-weight: 700; font-size: 34px; border-bottom: 1px solid #dbdbdb; color: #333;">2.画图资源汇总</h2>
+<h3 style="line-height: 160%; box-sizing: content-box; font-weight: 700; font-size: 27px; color: #333;">2.1 Top 50 matplotlib visualization</h3>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;">地址：<a href="https://www.machinelearningplus.com/plots/top-50-matplotlib-visualizations-the-master-plots-python/" style="line-height: 160%; box-sizing: content-box; text-decoration: underline; color: #5286bc;">https://www.machinelearningplus.com/plots/top-50-matplotlib-visualizations-the-master-plots-python/</a></p>
+<blockquote style="line-height: 160%; box-sizing: content-box; margin: 15px 0; border-left: 4px solid #ddd; padding: 0 15px; color: #777;">
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333; margin-top: 0; margin-bottom: 0;">50个最佳案例，讲述matplotlib画图</p>
+</blockquote>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;"><img src="Resource_organization_files/Image.png" type="image/png" data-filename="Image.png"/></p>
+<h3 style="line-height: 160%; box-sizing: content-box; font-weight: 700; font-size: 27px; color: #333;">2.2 On The World Map</h3>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;">地址：<a href="http://ontheworldmap.com/" style="line-height: 160%; box-sizing: content-box; text-decoration: underline; color: #5286bc;">http://ontheworldmap.com/</a></p>
+<blockquote style="line-height: 160%; box-sizing: content-box; margin: 15px 0; border-left: 4px solid #ddd; padding: 0 15px; color: #777;">
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333; margin-top: 0; margin-bottom: 0;">世界各地的地图</p>
+</blockquote>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;"><img src="Resource_organization_files/Image [1].png" type="image/png" data-filename="Image.png"/></p>
+<h3 style="line-height: 160%; box-sizing: content-box; font-weight: 700; font-size: 27px; color: #333;">2.3 自动绘制深度学习模型</h3>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;">地址：<a href="https://www.zhihu.com/answer/630155832" style="line-height: 160%; box-sizing: content-box; text-decoration: underline; color: #5286bc;">https://www.zhihu.com/answer/630155832</a></p>
+<blockquote style="line-height: 160%; box-sizing: content-box; margin: 15px 0; border-left: 4px solid #ddd; padding: 0 15px; color: #777;">
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333; margin-top: 0; margin-bottom: 0;">该作者汇总了全部可以画深度学习模型图的网站</p>
+</blockquote>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;"><img src="Resource_organization_files/Image [2].png" type="image/png" data-filename="Image.png"/></p>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;"><img src="Resource_organization_files/Image [3].png" type="image/png" data-filename="Image.png"/></p>
+<h2 style="line-height: 160%; box-sizing: content-box; font-weight: 700; font-size: 34px; border-bottom: 1px solid #dbdbdb; color: #333;">3.大牛博客类</h2>
+<h3 style="line-height: 160%; box-sizing: content-box; font-weight: 700; font-size: 27px; color: #333;">3.1 红色石头</h3>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;">地址：<a href="http://redstonewill.com/" style="line-height: 160%; box-sizing: content-box; text-decoration: underline; color: #5286bc;">http://redstonewill.com/</a></p>
+<blockquote style="line-height: 160%; box-sizing: content-box; margin: 15px 0; border-left: 4px solid #ddd; padding: 0 15px; color: #777;">
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333; margin-top: 0; margin-bottom: 0;">良心作者，整理了多个关于机器学习与深度学习的文章</p>
+</blockquote>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;"><img src="Resource_organization_files/Image [4].png" type="image/png" data-filename="Image.png"/></p>
+<h3 style="line-height: 160%; box-sizing: content-box; font-weight: 700; font-size: 27px; color: #333;">3.2 Loss Functions for Computer Vision Models</h3>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;">地址：<a href="https://playment.webflow.io/blog/loss-functions-computer-vision-models" style="line-height: 160%; box-sizing: content-box; text-decoration: underline; color: #5286bc;">https://playment.webflow.io/blog/loss-functions-computer-vision-models</a></p>
+<blockquote style="line-height: 160%; box-sizing: content-box; margin: 15px 0; border-left: 4px solid #ddd; padding: 0 15px; color: #777;">
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333; margin-top: 0; margin-bottom: 0;">讲述了各种图像处理，包括分类，目标检测等的损失函数介绍</p>
+</blockquote>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;"><img src="Resource_organization_files/Image [5].png" type="image/png" data-filename="Image.png"/></p>
+<h2 style="line-height: 160%; box-sizing: content-box; font-weight: 700; font-size: 34px; border-bottom: 1px solid #dbdbdb; color: #333;">4.Github</h2>
+<h2 style="line-height: 160%; box-sizing: content-box; font-weight: 700; font-size: 34px; border-bottom: 1px solid #dbdbdb; color: #333;">5.工具</h2>
+<h3 style="line-height: 160%; box-sizing: content-box; font-weight: 700; font-size: 27px; color: #333;">5.1 Color Themes</h3>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;">地址：<a href="http://color-themes.com/?view=index&amp;page=1&amp;order=popular&amp;search=&amp;layout=Generic" style="line-height: 160%; box-sizing: content-box; text-decoration: underline; color: #5286bc;">http://color-themes.com/?view=index&amp;page=1&amp;order=popular&amp;search=&amp;layout=Generic</a></p>
+<blockquote style="line-height: 160%; box-sizing: content-box; margin: 15px 0; border-left: 4px solid #ddd; padding: 0 15px; color: #777;">
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333; margin-top: 0; margin-bottom: 0;">代码风格下载，可以用与pycharm等IDLE</p>
+</blockquote>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;"><img src="Resource_organization_files/Image [6].png" type="image/png" data-filename="Image.png"/></p>
+<h3 style="line-height: 160%; box-sizing: content-box; font-weight: 700; font-size: 27px; color: #333;">5.2 系统迷</h3>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;">地址：<a href="https://www.xitmi.com/?tdsourcetag=s_pctim_aiomsg" style="line-height: 160%; box-sizing: content-box; text-decoration: underline; color: #5286bc;">https://www.xitmi.com/?tdsourcetag=s_pctim_aiomsg</a></p>
+<blockquote style="line-height: 160%; box-sizing: content-box; margin: 15px 0; border-left: 4px solid #ddd; padding: 0 15px; color: #777;">
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333; margin-top: 0; margin-bottom: 0;">各种破解软件网站</p>
+</blockquote>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;"><img src="Resource_organization_files/Image [7].png" type="image/png" data-filename="Image.png"/></p>
+<h3 style="line-height: 160%; box-sizing: content-box; font-weight: 700; font-size: 27px; color: #333;">5.3 偶书</h3>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;">地址：<a href="https://obook.cc/" style="line-height: 160%; box-sizing: content-box; text-decoration: underline; color: #5286bc;">https://obook.cc/</a></p>
+<blockquote style="line-height: 160%; box-sizing: content-box; margin: 15px 0; border-left: 4px solid #ddd; padding: 0 15px; color: #777;">
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333; margin-top: 0; margin-bottom: 0;">电子书下载网站</p>
+</blockquote>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;"><img src="Resource_organization_files/Image [8].png" type="image/png" data-filename="Image.png"/></p>
+<h3 style="line-height: 160%; box-sizing: content-box; font-weight: 700; font-size: 27px; color: #333;">5.4 电子书分享网站</h3>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;">地址：<a href="http://www.share2uu.com/" style="line-height: 160%; box-sizing: content-box; text-decoration: underline; color: #5286bc;">http://www.share2uu.com/</a></p>
+<blockquote style="line-height: 160%; box-sizing: content-box; margin: 15px 0; border-left: 4px solid #ddd; padding: 0 15px; color: #777;">
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333; margin-top: 0; margin-bottom: 0;">各种分享电子书</p>
+</blockquote>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;"><img src="Resource_organization_files/Image [9].png" type="image/png" data-filename="Image.png"/></p>
+<h2 style="line-height: 160%; box-sizing: content-box; font-weight: 700; font-size: 34px; border-bottom: 1px solid #dbdbdb; color: #333;">6.学术</h2>
+<h3 style="line-height: 160%; box-sizing: content-box; font-weight: 700; font-size: 27px; color: #333;">6.1 Library Genesis</h3>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;">地址：<a href="http://gen.lib.rus.ec/" style="line-height: 160%; box-sizing: content-box; text-decoration: underline; color: #5286bc;">http://gen.lib.rus.ec/</a></p>
+<blockquote style="line-height: 160%; box-sizing: content-box; margin: 15px 0; border-left: 4px solid #ddd; padding: 0 15px; color: #777;">
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333; margin-top: 0; margin-bottom: 0;">免费下载各种学术的书籍</p>
+</blockquote>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;"><img src="Resource_organization_files/Image [10].png" type="image/png" data-filename="Image.png"/></p>
+<h3 style="line-height: 160%; box-sizing: content-box; font-weight: 700; font-size: 27px; color: #333;">6.2 SCI-hub</h3>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;">地址：</p>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;"><a href="http://libgen.bban.top/" style="line-height: 160%; box-sizing: content-box; text-decoration: underline; color: #5286bc;">http://libgen.bban.top/</a></p>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;"><a href="https://sci-hub.si/" style="line-height: 160%; box-sizing: content-box; text-decoration: underline; color: #5286bc;">https://sci-hub.si/</a></p>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;"><a href="http://tool.yovisun.com/scihub/" style="line-height: 160%; box-sizing: content-box; text-decoration: underline; color: #5286bc;">http://tool.yovisun.com/scihub/</a></p>
+<blockquote style="line-height: 160%; box-sizing: content-box; margin: 15px 0; border-left: 4px solid #ddd; padding: 0 15px; color: #777;">
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333; margin-top: 0; margin-bottom: 0;">用于下载文献的网站，可以与谷歌学术相结合，一个检索，一个免费下载，但是SCI-hub容易被封杀，因此网站可能会有迁移变化</p>
+</blockquote>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;"><img src="Resource_organization_files/Image [11].png" type="image/png" data-filename="Image.png"/></p>
+<h3 style="line-height: 160%; box-sizing: content-box; font-weight: 700; font-size: 27px; color: #333;">6.3 ResearchGate</h3>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;">地址：<a href="https://www.researchgate.net/" style="line-height: 160%; box-sizing: content-box; text-decoration: underline; color: #5286bc;">https://www.researchgate.net/</a></p>
+<blockquote style="line-height: 160%; box-sizing: content-box; margin: 15px 0; border-left: 4px solid #ddd; padding: 0 15px; color: #777;">
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333; margin-top: 0; margin-bottom: 0;">学术资源网站，缺点是注册需要edu邮箱</p>
+</blockquote>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;"><img src="Resource_organization_files/Image [12].png" type="image/png" data-filename="Image.png"/></p>
+<h3 style="line-height: 160%; box-sizing: content-box; font-weight: 700; font-size: 27px; color: #333;">6.4 INNOJOY 专利搜索引擎</h3>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;">地址：<a href="http://www.innojoy.com/search/index.html" style="line-height: 160%; box-sizing: content-box; text-decoration: underline; color: #5286bc;">http://www.innojoy.com/search/index.html</a></p>
+<blockquote style="line-height: 160%; box-sizing: content-box; margin: 15px 0; border-left: 4px solid #ddd; padding: 0 15px; color: #777;">
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333; margin-top: 0; margin-bottom: 0;">免费的转移搜索引擎</p>
+</blockquote>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;"><img src="Resource_organization_files/Image [13].png" type="image/png" data-filename="Image.png"/></p>
+<h2 style="line-height: 160%; box-sizing: content-box; font-weight: 700; font-size: 34px; border-bottom: 1px solid #dbdbdb; color: #333;">7.官方手册</h2>
+<h3 style="line-height: 160%; box-sizing: content-box; font-weight: 700; font-size: 27px; color: #333;">7.1 Tensorflow/Keras</h3>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;">地址：<a href="https://tensorflow.google.cn/" style="line-height: 160%; box-sizing: content-box; text-decoration: underline; color: #5286bc;">https://tensorflow.google.cn/</a></p>
+<blockquote style="line-height: 160%; box-sizing: content-box; margin: 15px 0; border-left: 4px solid #ddd; padding: 0 15px; color: #777;">
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333; margin-top: 0; margin-bottom: 0;">tensorflow的官方手册</p>
+</blockquote>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;"><img src="Resource_organization_files/Image [14].png" type="image/png" data-filename="Image.png"/></p>
+<h3 style="line-height: 160%; box-sizing: content-box; font-weight: 700; font-size: 27px; color: #333;">7.2 Pytorch</h3>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;">地址：<a href="https://pytorch.org/" style="line-height: 160%; box-sizing: content-box; text-decoration: underline; color: #5286bc;">https://pytorch.org/</a></p>
+<blockquote style="line-height: 160%; box-sizing: content-box; margin: 15px 0; border-left: 4px solid #ddd; padding: 0 15px; color: #777;">
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333; margin-top: 0; margin-bottom: 0;">pytorch的官方手册</p>
+</blockquote>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;"><img src="Resource_organization_files/Image [15].png" type="image/png" data-filename="Image.png"/></p>
+<h3 style="line-height: 160%; box-sizing: content-box; font-weight: 700; font-size: 27px; color: #333;">7.3 Dlib</h3>
+<blockquote style="line-height: 160%; box-sizing: content-box; margin: 15px 0; border-left: 4px solid #ddd; padding: 0 15px; color: #777;">
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333; margin-top: 0; margin-bottom: 0;">人脸识别库</p>
+</blockquote>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;">地址：<a href="http://dlib.net/" style="line-height: 160%; box-sizing: content-box; text-decoration: underline; color: #5286bc;">http://dlib.net/</a></p>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;"><img src="Resource_organization_files/Image [16].png" type="image/png" data-filename="Image.png"/></p>
+<h2 style="line-height: 160%; box-sizing: content-box; font-weight: 700; font-size: 34px; border-bottom: 1px solid #dbdbdb; color: #333;">8 数据集</h2>
+<h3 style="line-height: 160%; box-sizing: content-box; font-weight: 700; font-size: 27px; color: #333;">8.1 ImageNet</h3>
+<blockquote style="line-height: 160%; box-sizing: content-box; margin: 15px 0; border-left: 4px solid #ddd; padding: 0 15px; color: #777;">
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333; margin-top: 0; margin-bottom: 0;">主要是大规模图像分类</p>
+</blockquote>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;">地址：<a href="http://www.image-net.org/" style="line-height: 160%; box-sizing: content-box; text-decoration: underline; color: #5286bc;">http://www.image-net.org/</a></p>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;"><img src="Resource_organization_files/Image [17].png" type="image/png" data-filename="Image.png"/></p>
+<h3 style="line-height: 160%; box-sizing: content-box; font-weight: 700; font-size: 27px; color: #333;">8.2 Kaggle</h3>
+<blockquote style="line-height: 160%; box-sizing: content-box; margin: 15px 0; border-left: 4px solid #ddd; padding: 0 15px; color: #777;">
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333; margin-top: 0; margin-bottom: 0;">各类数据集</p>
+</blockquote>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;">地址：<a href="https://www.kaggle.com/datasets" style="line-height: 160%; box-sizing: content-box; text-decoration: underline; color: #5286bc;"> https://www.kaggle.com/datasets</a></p>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;"><img src="Resource_organization_files/Image [18].png" type="image/png" data-filename="Image.png"/></p>
+<h3 style="line-height: 160%; box-sizing: content-box; font-weight: 700; font-size: 27px; color: #333;">8.3 Analytics Vidhya</h3>
+<blockquote style="line-height: 160%; box-sizing: content-box; margin: 15px 0; border-left: 4px solid #ddd; padding: 0 15px; color: #777;">
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333; margin-top: 0; margin-bottom: 0;">各类数据集</p>
+</blockquote>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;">地址：<a href="https://datahack.analyticsvidhya.com/contest/all/" style="line-height: 160%; box-sizing: content-box; text-decoration: underline; color: #5286bc;">https://datahack.analyticsvidhya.com/contest/all/</a></p>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;"><img src="Resource_organization_files/Image [19].png" type="image/png" data-filename="Image.png"/></p>
+<h3 style="line-height: 160%; box-sizing: content-box; font-weight: 700; font-size: 27px; color: #333;">8.4 UCI Machine Learning Repository</h3>
+<blockquote style="line-height: 160%; box-sizing: content-box; margin: 15px 0; border-left: 4px solid #ddd; padding: 0 15px; color: #777;">
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333; margin-top: 0; margin-bottom: 0;">机器学习数据集</p>
+</blockquote>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;">地址：<a href="https://archive.ics.uci.edu/ml/index.php" style="line-height: 160%; box-sizing: content-box; text-decoration: underline; color: #5286bc;">https://archive.ics.uci.edu/ml/index.php</a></p>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;">88cec5132bf4d8dcf69284acff72646a.png</p>
+<h3 style="line-height: 160%; box-sizing: content-box; font-weight: 700; font-size: 27px; color: #333;">Github整理</h3>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;">地址：<a href="https://github.com/awesomedata/awesome-public-datasets" style="line-height: 160%; box-sizing: content-box; text-decoration: underline; color: #5286bc;">https://github.com/awesomedata/awesome-public-datasets</a></p>
+<p style="line-height: 160%; box-sizing: content-box; margin: 10px 0; color: #333;"><img src="Resource_organization_files/Image [20].png" type="image/png" data-filename="Image.png"/></p>
+</div><center style="display:none !important;visibility:collapse !important;height:0 !important;white-space:nowrap;width:100%;overflow:hidden">%23%20%E5%AE%9D%E8%97%8F%E8%B5%84%E6%BA%90%E6%95%B4%E7%90%86%EF%BC%9A%0A%0A%5BTOC%5D%0A%0A%3E%20%E9%99%88%E8%8B%A5%E6%84%9A%E6%95%B4%E7%90%86%0A%3E%20email%3A%202389388826%40qq.com%0A%0A%23%23%201.%E5%85%88%E8%BF%9B%E7%9A%84%E8%AE%BA%E6%96%87%E7%BD%91%E7%AB%99%0A%0A%E5%9C%B0%E5%9D%80%EF%BC%9A%5Bhttps%3A%2F%2Fpaperswithcode.com%2Fsota%5D(https%3A%2F%2Fpaperswithcode.com%2Fsota)%0A%0A%3E%20%E8%AF%A5%E7%BD%91%E7%AB%99%E6%9C%89%E8%BE%83%E4%B8%BA%E5%85%88%E8%BF%9B%E7%9A%84%E8%AE%BA%E6%96%87%E4%B8%8E%E4%BB%A3%E7%A0%81%E7%9A%84%E6%B1%87%E6%80%BB%EF%BC%8C%E5%88%86%E5%BE%88%E5%A4%9A%E7%B1%BB%EF%BC%8C%E4%BE%8B%E5%A6%82%E5%9B%BE%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E3%80%81%E5%9B%BE%E5%83%8F%E5%88%86%E5%89%B2%E3%80%81%E7%94%9F%E7%89%A9%E5%8C%BB%E5%AD%A6%E5%9B%BE%E5%83%8F%E7%AD%89%E7%AD%89%E3%80%82%0A%0A!%5B2e386ab2d18de8a0e893236ac0323a2f.png%5D(en-resource%3A%2F%2Fdatabase%2F678%3A1)%0A%0A%23%23%202.%E7%94%BB%E5%9B%BE%E8%B5%84%E6%BA%90%E6%B1%87%E6%80%BB%0A%0A%23%23%23%202.1%20Top%2050%20matplotlib%20visualization%0A%0A%E5%9C%B0%E5%9D%80%EF%BC%9A%5Bhttps%3A%2F%2Fwww.machinelearningplus.com%2Fplots%2Ftop-50-matplotlib-visualizations-the-master-plots-python%2F%5D(https%3A%2F%2Fwww.machinelearningplus.com%2Fplots%2Ftop-50-matplotlib-visualizations-the-master-plots-python%2F)%0A%0A%3E%2050%E4%B8%AA%E6%9C%80%E4%BD%B3%E6%A1%88%E4%BE%8B%EF%BC%8C%E8%AE%B2%E8%BF%B0matplotlib%E7%94%BB%E5%9B%BE%0A%0A!%5Bad11a90f1cce7f7f5514fd287bd8bbf9.png%5D(en-resource%3A%2F%2Fdatabase%2F680%3A1)%0A%0A%23%23%23%202.2%20On%20The%20World%20Map%0A%0A%E5%9C%B0%E5%9D%80%EF%BC%9A%5Bhttp%3A%2F%2Fontheworldmap.com%2F%5D(http%3A%2F%2Fontheworldmap.com%2F)%0A%0A%3E%20%E4%B8%96%E7%95%8C%E5%90%84%E5%9C%B0%E7%9A%84%E5%9C%B0%E5%9B%BE%0A%0A!%5Bf38a244e26c5936a46b78de7f178dadf.png%5D(en-resource%3A%2F%2Fdatabase%2F684%3A1)%0A%0A%23%23%23%202.3%20%E8%87%AA%E5%8A%A8%E7%BB%98%E5%88%B6%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%A8%A1%E5%9E%8B%0A%0A%E5%9C%B0%E5%9D%80%EF%BC%9A%5Bhttps%3A%2F%2Fwww.zhihu.com%2Fanswer%2F630155832%5D(https%3A%2F%2Fwww.zhihu.com%2Fanswer%2F630155832)%0A%0A%3E%20%E8%AF%A5%E4%BD%9C%E8%80%85%E6%B1%87%E6%80%BB%E4%BA%86%E5%85%A8%E9%83%A8%E5%8F%AF%E4%BB%A5%E7%94%BB%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%A8%A1%E5%9E%8B%E5%9B%BE%E7%9A%84%E7%BD%91%E7%AB%99%0A%0A!%5Bd18d0f99317ca5f089609c8d665d787e.png%5D(en-resource%3A%2F%2Fdatabase%2F720%3A1)%0A%0A!%5B5e3ca77f98a1474011abc3cdd6bfcb7f.png%5D(en-resource%3A%2F%2Fdatabase%2F718%3A1)%0A%0A%0A%23%23%203.%E5%A4%A7%E7%89%9B%E5%8D%9A%E5%AE%A2%E7%B1%BB%0A%0A%23%23%23%203.1%20%E7%BA%A2%E8%89%B2%E7%9F%B3%E5%A4%B4%0A%0A%E5%9C%B0%E5%9D%80%EF%BC%9A%5Bhttp%3A%2F%2Fredstonewill.com%2F%5D(http%3A%2F%2Fredstonewill.com%2F)%0A%0A%3E%20%E8%89%AF%E5%BF%83%E4%BD%9C%E8%80%85%EF%BC%8C%E6%95%B4%E7%90%86%E4%BA%86%E5%A4%9A%E4%B8%AA%E5%85%B3%E4%BA%8E%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%84%E6%96%87%E7%AB%A0%0A%0A!%5B45f388696db003db716cf0d5812d6005.png%5D(en-resource%3A%2F%2Fdatabase%2F682%3A1)%0A%0A%23%23%23%203.2%20Loss%20Functions%20for%20Computer%20Vision%20Models%0A%0A%E5%9C%B0%E5%9D%80%EF%BC%9A%5Bhttps%3A%2F%2Fplayment.webflow.io%2Fblog%2Floss-functions-computer-vision-models%5D(https%3A%2F%2Fplayment.webflow.io%2Fblog%2Floss-functions-computer-vision-models)%0A%0A%3E%20%E8%AE%B2%E8%BF%B0%E4%BA%86%E5%90%84%E7%A7%8D%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%EF%BC%8C%E5%8C%85%E6%8B%AC%E5%88%86%E7%B1%BB%EF%BC%8C%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B%E7%AD%89%E7%9A%84%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0%E4%BB%8B%E7%BB%8D%0A%0A!%5Bbb2b7c0d54308db56f4a1ef77c0d7bda.png%5D(en-resource%3A%2F%2Fdatabase%2F688%3A1)%0A%0A%23%23%204.Github%0A%0A%23%23%205.%E5%B7%A5%E5%85%B7%0A%0A%23%23%23%205.1%20Color%20Themes%0A%0A%E5%9C%B0%E5%9D%80%EF%BC%9A%5Bhttp%3A%2F%2Fcolor-themes.com%2F%3Fview%3Dindex%26page%3D1%26order%3Dpopular%26search%3D%26layout%3DGeneric%5D(http%3A%2F%2Fcolor-themes.com%2F%3Fview%3Dindex%26page%3D1%26order%3Dpopular%26search%3D%26layout%3DGeneric)%0A%0A%3E%20%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC%E4%B8%8B%E8%BD%BD%EF%BC%8C%E5%8F%AF%E4%BB%A5%E7%94%A8%E4%B8%8Epycharm%E7%AD%89IDLE%0A%0A!%5B372108f8bd9733c8283f4e1014693c0c.png%5D(en-resource%3A%2F%2Fdatabase%2F686%3A1)%0A%0A%23%23%23%205.2%20%E7%B3%BB%E7%BB%9F%E8%BF%B7%0A%0A%E5%9C%B0%E5%9D%80%EF%BC%9A%5Bhttps%3A%2F%2Fwww.xitmi.com%2F%3Ftdsourcetag%3Ds_pctim_aiomsg%5D(https%3A%2F%2Fwww.xitmi.com%2F%3Ftdsourcetag%3Ds_pctim_aiomsg)%0A%0A%3E%20%E5%90%84%E7%A7%8D%E7%A0%B4%E8%A7%A3%E8%BD%AF%E4%BB%B6%E7%BD%91%E7%AB%99%0A%0A!%5B44662a5cedb434667e72e99848b531bc.png%5D(en-resource%3A%2F%2Fdatabase%2F722%3A0)%0A%0A%23%23%23%205.3%20%E5%81%B6%E4%B9%A6%0A%0A%E5%9C%B0%E5%9D%80%EF%BC%9A%5Bhttps%3A%2F%2Fobook.cc%2F%5D(https%3A%2F%2Fobook.cc%2F)%0A%0A%3E%20%E7%94%B5%E5%AD%90%E4%B9%A6%E4%B8%8B%E8%BD%BD%E7%BD%91%E7%AB%99%0A%0A!%5B5767f03aa9bd9b006d44184310b1414c.png%5D(en-resource%3A%2F%2Fdatabase%2F726%3A1)%0A%0A%23%23%23%205.4%20%E7%94%B5%E5%AD%90%E4%B9%A6%E5%88%86%E4%BA%AB%E7%BD%91%E7%AB%99%0A%0A%E5%9C%B0%E5%9D%80%EF%BC%9A%5Bhttp%3A%2F%2Fwww.share2uu.com%2F%5D(http%3A%2F%2Fwww.share2uu.com%2F)%0A%0A%3E%20%E5%90%84%E7%A7%8D%E5%88%86%E4%BA%AB%E7%94%B5%E5%AD%90%E4%B9%A6%0A%0A!%5Bb98e14e4b6474d35730577e964dfa540.png%5D(en-resource%3A%2F%2Fdatabase%2F730%3A0)%0A%0A%23%23%206.%E5%AD%A6%E6%9C%AF%0A%0A%23%23%23%206.1%20Library%20Genesis%0A%0A%E5%9C%B0%E5%9D%80%EF%BC%9A%5Bhttp%3A%2F%2Fgen.lib.rus.ec%2F%5D(http%3A%2F%2Fgen.lib.rus.ec%2F)%0A%0A%3E%20%E5%85%8D%E8%B4%B9%E4%B8%8B%E8%BD%BD%E5%90%84%E7%A7%8D%E5%AD%A6%E6%9C%AF%E7%9A%84%E4%B9%A6%E7%B1%8D%0A%0A!%5B145bc834ef92980a81fb0f095e2fa75b.png%5D(en-resource%3A%2F%2Fdatabase%2F690%3A1)%0A%0A%23%23%23%206.2%20SCI-hub%0A%0A%E5%9C%B0%E5%9D%80%EF%BC%9A%0A%5Bhttp%3A%2F%2Flibgen.bban.top%2F%5D(http%3A%2F%2Flibgen.bban.top%2F)%0A%5Bhttps%3A%2F%2Fsci-hub.si%2F%5D(https%3A%2F%2Fsci-hub.si%2F)%0A%5Bhttp%3A%2F%2Ftool.yovisun.com%2Fscihub%2F%5D(http%3A%2F%2Ftool.yovisun.com%2Fscihub%2F)%0A%0A%3E%20%E7%94%A8%E4%BA%8E%E4%B8%8B%E8%BD%BD%E6%96%87%E7%8C%AE%E7%9A%84%E7%BD%91%E7%AB%99%EF%BC%8C%E5%8F%AF%E4%BB%A5%E4%B8%8E%E8%B0%B7%E6%AD%8C%E5%AD%A6%E6%9C%AF%E7%9B%B8%E7%BB%93%E5%90%88%EF%BC%8C%E4%B8%80%E4%B8%AA%E6%A3%80%E7%B4%A2%EF%BC%8C%E4%B8%80%E4%B8%AA%E5%85%8D%E8%B4%B9%E4%B8%8B%E8%BD%BD%EF%BC%8C%E4%BD%86%E6%98%AFSCI-hub%E5%AE%B9%E6%98%93%E8%A2%AB%E5%B0%81%E6%9D%80%EF%BC%8C%E5%9B%A0%E6%AD%A4%E7%BD%91%E7%AB%99%E5%8F%AF%E8%83%BD%E4%BC%9A%E6%9C%89%E8%BF%81%E7%A7%BB%E5%8F%98%E5%8C%96%0A%0A!%5Bd1660f1a215d8b0a9e4e61751eb1af7d.png%5D(en-resource%3A%2F%2Fdatabase%2F692%3A1)%0A%0A%23%23%23%206.3%20ResearchGate%0A%0A%E5%9C%B0%E5%9D%80%EF%BC%9A%5Bhttps%3A%2F%2Fwww.researchgate.net%2F%5D(https%3A%2F%2Fwww.researchgate.net%2F)%0A%0A%3E%20%E5%AD%A6%E6%9C%AF%E8%B5%84%E6%BA%90%E7%BD%91%E7%AB%99%EF%BC%8C%E7%BC%BA%E7%82%B9%E6%98%AF%E6%B3%A8%E5%86%8C%E9%9C%80%E8%A6%81edu%E9%82%AE%E7%AE%B1%0A%0A!%5B7115940a9c8929a0ba45384b5f90dce1.png%5D(en-resource%3A%2F%2Fdatabase%2F694%3A1)%0A%0A%23%23%23%206.4%20INNOJOY%20%E4%B8%93%E5%88%A9%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E%0A%0A%E5%9C%B0%E5%9D%80%EF%BC%9A%5Bhttp%3A%2F%2Fwww.innojoy.com%2Fsearch%2Findex.html%5D(http%3A%2F%2Fwww.innojoy.com%2Fsearch%2Findex.html)%0A%0A%3E%20%E5%85%8D%E8%B4%B9%E7%9A%84%E8%BD%AC%E7%A7%BB%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E%0A%0A!%5Bd973f54bd2a7d05a1f3be6e02c6d1fae.png%5D(en-resource%3A%2F%2Fdatabase%2F696%3A1)%0A%0A%23%23%207.%E5%AE%98%E6%96%B9%E6%89%8B%E5%86%8C%0A%0A%23%23%23%207.1%20Tensorflow%2FKeras%0A%0A%E5%9C%B0%E5%9D%80%EF%BC%9A%5Bhttps%3A%2F%2Ftensorflow.google.cn%2F%5D(https%3A%2F%2Ftensorflow.google.cn%2F)%0A%0A%3E%20tensorflow%E7%9A%84%E5%AE%98%E6%96%B9%E6%89%8B%E5%86%8C%0A%0A!%5B13eab1fe15be66c2629acf3dafc73967.png%5D(en-resource%3A%2F%2Fdatabase%2F698%3A1)%0A%0A%0A%23%23%23%207.2%20Pytorch%0A%0A%E5%9C%B0%E5%9D%80%EF%BC%9A%5Bhttps%3A%2F%2Fpytorch.org%2F%5D(https%3A%2F%2Fpytorch.org%2F)%0A%0A%3E%20pytorch%E7%9A%84%E5%AE%98%E6%96%B9%E6%89%8B%E5%86%8C%0A%0A!%5Bd8eda312459799eb912cb140f7625aa9.png%5D(en-resource%3A%2F%2Fdatabase%2F702%3A1)%0A%0A%23%23%23%207.3%20Dlib%0A%0A%3E%20%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB%E5%BA%93%0A%0A%E5%9C%B0%E5%9D%80%EF%BC%9A%5Bhttp%3A%2F%2Fdlib.net%2F%5D(http%3A%2F%2Fdlib.net%2F)%0A%0A!%5B79671a1cc4467af0380e9904677c908e.png%5D(en-resource%3A%2F%2Fdatabase%2F700%3A1)%0A%0A%23%23%208%20%E6%95%B0%E6%8D%AE%E9%9B%86%0A%0A%23%23%23%208.1%20ImageNet%0A%0A%3E%20%E4%B8%BB%E8%A6%81%E6%98%AF%E5%A4%A7%E8%A7%84%E6%A8%A1%E5%9B%BE%E5%83%8F%E5%88%86%E7%B1%BB%0A%0A%E5%9C%B0%E5%9D%80%EF%BC%9A%5Bhttp%3A%2F%2Fwww.image-net.org%2F%5D(http%3A%2F%2Fwww.image-net.org%2F)%0A%0A!%5B1525919aa6038c04d067653cc7e9c599.png%5D(en-resource%3A%2F%2Fdatabase%2F704%3A1)%0A%0A%23%23%23%208.2%20Kaggle%0A%0A%3E%20%E5%90%84%E7%B1%BB%E6%95%B0%E6%8D%AE%E9%9B%86%0A%0A%E5%9C%B0%E5%9D%80%EF%BC%9A%5B%C2%A0https%3A%2F%2Fwww.kaggle.com%2Fdatasets%5D(https%3A%2F%2Fwww.kaggle.com%2Fdatasets)%0A%0A!%5B64be2b10f9eae6ff94571c4303b0f066.png%5D(en-resource%3A%2F%2Fdatabase%2F710%3A1)%0A%0A%23%23%23%208.3%20Analytics%20Vidhya%0A%0A%3E%20%E5%90%84%E7%B1%BB%E6%95%B0%E6%8D%AE%E9%9B%86%0A%0A%E5%9C%B0%E5%9D%80%EF%BC%9A%5Bhttps%3A%2F%2Fdatahack.analyticsvidhya.com%2Fcontest%2Fall%2F%5D(https%3A%2F%2Fdatahack.analyticsvidhya.com%2Fcontest%2Fall%2F)%0A%0A!%5B035384631c299498cdd4dfc3bd7b2f9d.png%5D(en-resource%3A%2F%2Fdatabase%2F712%3A1)%0A%0A%23%23%23%208.4%20UCI%20Machine%20Learning%20Repository%0A%0A%3E%20%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%95%B0%E6%8D%AE%E9%9B%86%0A%0A%E5%9C%B0%E5%9D%80%EF%BC%9A%5Bhttps%3A%2F%2Farchive.ics.uci.edu%2Fml%2Findex.php%5D(https%3A%2F%2Farchive.ics.uci.edu%2Fml%2Findex.php)%0A%0A88cec5132bf4d8dcf69284acff72646a.png%0A%0A%23%23%23%20Github%E6%95%B4%E7%90%86%0A%0A%E5%9C%B0%E5%9D%80%EF%BC%9A%5Bhttps%3A%2F%2Fgithub.com%2Fawesomedata%2Fawesome-public-datasets%5D(https%3A%2F%2Fgithub.com%2Fawesomedata%2Fawesome-public-datasets)%0A%0A!%5B7a3840a736cdb5125132877fb9bbe2ac.png%5D(en-resource%3A%2F%2Fdatabase%2F716%3A1)%0A%0A%0A</center></span>
+</div></body></html> 
