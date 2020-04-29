@@ -706,7 +706,7 @@ vertical-align:1px;
         node.tag.setAttribute("id", tagContent);
 
         var curDirectory = getIndex(parentDirectory, directoryLevel, index);
-        var directoryName = curDirectory + "&nbsp;" + tagContent;
+        var directoryName = curDirectory + " " + tagContent;
 
         // 叶子节点
         if (childNodes.length === 0) {
@@ -888,15 +888,15 @@ vertical-align:1px;
 <hr>
 <h2 id="0-">0. 常用库</h2>
 <pre class="prettyprint lang-c">
-#include < iostream>
-#include < opencv2/core/core.hpp>  
-#include < opencv2/highgui/highgui.hpp>  
-#include < opencv2/opencv.hpp>
-#include < opencv2/imgproc.hpp>
-#include < opencv2/core/types_c.h>
-#include < opencv2/imgproc/imgproc_c.h>
-#include < cassert>
-#include < vector> 
+#include "iostream"
+#include "opencv2/core/core.hpp"  
+#include "opencv2/highgui/highgui.hpp"  
+#include "opencv2/opencv.hpp"
+#include "opencv2/imgproc.hpp"
+#include "opencv2/core/types_c.h"
+#include "opencv2/imgproc/imgproc_c.h"
+#include "cassert"
+#include "vector"
 </pre>
 
 <h2 id="1-">1. 图像读入、显示与保存</h2>
@@ -907,19 +907,19 @@ vertical-align:1px;
 <li>不含命名空间格式：</li></ul>
 <pre class="prettyprint lang-c++" white-space: pre-wrap;>
 
-#include < iostream> 
-#include < opencv2/core/core.hpp> 
-#include < opencv2/highgui/highgui.hpp>
-#include < opencv2/opencv.hpp>
-#include < opencv2/imgproc.hpp>  
+#include "iostream" 
+#include "opencv2/core/core.hpp" 
+#include "opencv2/highgui/highgui.hpp"
+#include "opencv2/opencv.hpp"
+#include "opencv2/imgproc.hpp"  
 
 int main()
 {
     // 工作台输出
     std::cout << "Hello OpenCV!" << std::endl;
-    // 读入一张图片 
+    // 读入一张图片
     cv::Mat img = cv::imread("Lena.jfif");
-    // 判断图片读取是否有误    
+    // 判断图片读取是否有误 
     if (!img.data)
     {
         std::cout << "读取原始图失败！" << std::endl;
@@ -927,9 +927,9 @@ int main()
     }  
     // 创建一个名为 "图片"窗口
     cv::namedWindow("Lena");
-    // 在窗口中显示图片   
+    // 在窗口中显示图片  
     cv::imshow("Lena", img);
-    // 等待6000 ms后窗口自动关闭    
+    // 等待6000 ms后窗口自动关闭   
     cv::waitKey(6000);
     // 将图片保存为jpg格式
     cv::imwrite("Lena.jpg", img);
@@ -940,11 +940,11 @@ int main()
 <ul>
 <li>含命名空间格式：</li></ul>
 <pre class="prettyprint lang-c++">
-#include < iostream>  
-#include < opencv2/core/core.hpp>  
-#include < opencv2/highgui/highgui.hpp>
-#include < opencv2/opencv.hpp>
-#include < opencv2/imgproc.hpp>  
+#include "iostream"  
+#include "opencv2/core/core.hpp"  
+#include "opencv2/highgui/highgui.hpp"
+#include "opencv2/opencv.hpp"
+#include "opencv2/imgproc.hpp"  
 
 using namespace std;
 using namespace cv;
@@ -972,11 +972,11 @@ int main()
 <h2 id="2-">2. 图像处理基础</h2>
 <h3 id="2-1-">2.1 灰度图转化</h3>
 <pre class="prettyprint lang-c++">
-#include < iostream>  
-#include < opencv2/core/core.hpp>  
-#include < opencv2/highgui/highgui.hpp>  
-#include < opencv2/opencv.hpp>
-#include < opencv2/imgproc.hpp>
+#include "iostream"  
+#include "opencv2/core/core.hpp"  
+#include "opencv2/highgui/highgui.hpp"  
+#include "opencv2/opencv.hpp"
+#include "opencv2/imgproc.hpp"
 
 int main()
 {
@@ -1002,11 +1002,11 @@ int main()
 
 <h3 id="2-2-">2.2 获取图像属性</h3>
 <pre class="prettyprint lang-c++">
-#include < iostream>  
-#include < opencv2/core/core.hpp>  
-#include < opencv2/highgui/highgui.hpp>  
-#include < opencv2/opencv.hpp>
-#include < opencv2/imgproc.hpp>
+#include "iostream"  
+#include "opencv2/core/core.hpp"  
+#include "opencv2/highgui/highgui.hpp"  
+#include "opencv2/opencv.hpp"
+#include "opencv2/imgproc.hpp"
 
 int main()
 {
@@ -1064,11 +1064,11 @@ int main()
 <ul>
 <li>Example(彩色图像部分修改)</li></ul>
 <pre class="prettyprint lang-c++">
-#include < iostream>  
-#include < opencv2/core/core.hpp>  
-#include < opencv2/highgui/highgui.hpp>  
-#include < opencv2/opencv.hpp>
-#include < opencv2/imgproc.hpp>
+#include "iostream"  
+#include "opencv2/core/core.hpp"  
+#include "opencv2/highgui/highgui.hpp"  
+#include "opencv2/opencv.hpp"
+#include "opencv2/imgproc.hpp"
 
 int main()
 {
@@ -1105,11 +1105,11 @@ int main()
 <ul>
 <li>Example:提取Lena的脸部图像，并在原图中框出来</li></ul>
 <pre class="prettyprint lang-c++">
-#include < iostream>  
-#include < opencv2/core/core.hpp>  
-#include < opencv2/highgui/highgui.hpp>  
-#include < opencv2/opencv.hpp>
-#include < opencv2/imgproc.hpp>
+#include "iostream"  
+#include "opencv2/core/core.hpp"  
+#include "opencv2/highgui/highgui.hpp"  
+#include "opencv2/opencv.hpp"
+#include "opencv2/imgproc.hpp"
 
 int main(){
     // 读取图像
@@ -1137,13 +1137,13 @@ int main(){
 <ul>
 <li>Example:拆分通道，再将通道顺序取反合并</li></ul>
 <pre class="prettyprint lang-c++">
-#include < iostream>  
-#include < opencv2/core/core.hpp>  
-#include < opencv2/highgui/highgui.hpp>  
-#include < opencv2/opencv.hpp>
-#include < opencv2/imgproc.hpp>
-#include < cassert>  
-#include < vector> 
+#include "iostream"  
+#include "opencv2/core/core.hpp"  
+#include "opencv2/highgui/highgui.hpp"  
+#include "opencv2/opencv.hpp"
+#include "opencv2/imgproc.hpp"
+#include "cassert"  
+#include "vector" 
 
 int main()
 {
@@ -1184,13 +1184,13 @@ int main()
 <ul>
 <li>Example:两个size相同的图片相加</li></ul>
 <pre class="prettyprint lang-c++">
-#include < iostream>  
-#include < opencv2/core/core.hpp>  
-#include < opencv2/highgui/highgui.hpp>  
-#include < opencv2/opencv.hpp>
-#include < opencv2/imgproc.hpp>
-#include < cassert>  
-#include < vector>
+#include "iostream"  
+#include "opencv2/core/core.hpp"  
+#include "opencv2/highgui/highgui.hpp"  
+#include "opencv2/opencv.hpp"
+#include "opencv2/imgproc.hpp"
+#include "cassert"  
+#include "vector"
 
 int main()
 {
@@ -1216,13 +1216,13 @@ int main()
 </li><li><p>Example: RGB图转灰度与BGR类型</p>
 </li></ul>
 <pre class="prettyprint lang-c++">
-#include < iostream>  
-#include < opencv2/core/core.hpp>  
-#include < opencv2/highgui/highgui.hpp>  
-#include < opencv2/opencv.hpp>
-#include < opencv2/imgproc.hpp>
-#include < cassert>  
-#include < vector>
+#include "iostream"  
+#include "opencv2/core/core.hpp"  
+#include "opencv2/highgui/highgui.hpp"  
+#include "opencv2/opencv.hpp"
+#include "opencv2/imgproc.hpp"
+#include "cassert"  
+#include "vector"
 
 int main()
 {
@@ -1249,13 +1249,13 @@ int main()
 <h2 id="5-">5. 几何变换</h2>
 <h3 id="5-1-">5.1 图像缩放</h3>
 <pre class="prettyprint lang-c++">
-#include < iostream>  
-#include < opencv2/core/core.hpp>  
-#include < opencv2/highgui/highgui.hpp>  
-#include < opencv2/opencv.hpp>
-#include < opencv2/imgproc.hpp>
-#include < cassert>  
-#include < vector>
+#include "iostream"  
+#include "opencv2/core/core.hpp"  
+#include "opencv2/highgui/highgui.hpp"  
+#include "opencv2/opencv.hpp"
+#include "opencv2/imgproc.hpp"
+#include "cassert"  
+#include "vector"
 
 int main()
 {
@@ -1281,15 +1281,15 @@ int main()
 </li></ul>
 <h3 id="5-2-">5.2 图像翻转</h3>
 <pre class="prettyprint lang-c++">
-#include < iostream>  
-#include < opencv2/core/core.hpp>  
-#include < opencv2/highgui/highgui.hpp>  
-#include < opencv2/opencv.hpp>
-#include < opencv2/imgproc.hpp>
-#include < opencv2/core/types_c.h>
-#include < opencv2/imgproc/imgproc_c.h>
-#include < cassert>  
-#include < vector> 
+#include "iostream"  
+#include "opencv2/core/core.hpp"  
+#include "opencv2/highgui/highgui.hpp"  
+#include "opencv2/opencv.hpp"
+#include "opencv2/imgproc.hpp"
+#include "opencv2/core/types_c.h"
+#include "opencv2/imgproc/imgproc_c.h"
+#include "cassert"  
+#include "vector" 
 
 cv::Mat RotateImage(cv::Mat src, double angle)
 {
@@ -1336,15 +1336,15 @@ int main(int argc, char* argv[])
 </li></ul>
 <h2 id="6-">6. 直方图</h2>
 <pre class="prettyprint lang-c++">
-#include < iostream>  
-#include < opencv2/core/core.hpp>  
-#include < opencv2/highgui/highgui.hpp>  
-#include < opencv2/opencv.hpp>
-#include < opencv2/imgproc.hpp>
-#include < opencv2/core/types_c.h>
-#include < opencv2/imgproc/imgproc_c.h>
-#include < cassert>  
-#include < vector> 
+#include "iostream"  
+#include "opencv2/core/core.hpp"  
+#include "opencv2/highgui/highgui.hpp"  
+#include "opencv2/opencv.hpp"
+#include "opencv2/imgproc.hpp"
+#include "opencv2/core/types_c.h"
+#include "opencv2/imgproc/imgproc_c.h"
+#include "cassert"  
+#include "vector" 
 
 int main(int argc, char* argv)
 {
@@ -1402,15 +1402,15 @@ int main(int argc, char* argv)
 <ul>
 <li>Example:方框滤波，均值滤波，中值滤波，高斯滤波</li></ul>
 <pre class="prettyprint lang-c++">
-#include < iostream>  
-#include < opencv2/core/core.hpp>  
-#include < opencv2/highgui/highgui.hpp>  
-#include < opencv2/opencv.hpp>
-#include < opencv2/imgproc.hpp>
-#include < opencv2/core/types_c.h>
-#include < opencv2/imgproc/imgproc_c.h>
-#include < cassert>  
-#include < vector> 
+#include "iostream"  
+#include "opencv2/core/core.hpp"  
+#include "opencv2/highgui/highgui.hpp"  
+#include "opencv2/opencv.hpp"
+#include "opencv2/imgproc.hpp"
+#include "opencv2/core/types_c.h"
+#include "opencv2/imgproc/imgproc_c.h"
+#include "cassert"  
+#include "vector" 
 
 int main(int argc, char* argv)
 {
@@ -1442,15 +1442,15 @@ int main(int argc, char* argv)
 <center><img src="imgs\thresh.jpg" alt=""></center>
 
 <pre class="prettyprint lang-c++">
-#include < iostream>  
-#include < opencv2/core/core.hpp>  
-#include < opencv2/highgui/highgui.hpp>  
-#include < opencv2/opencv.hpp>
-#include < opencv2/imgproc.hpp>
-#include < opencv2/core/types_c.h>
-#include < opencv2/imgproc/imgproc_c.h>
-#include < cassert>  
-#include < vector> 
+#include "iostream"  
+#include "opencv2/core/core.hpp"  
+#include "opencv2/highgui/highgui.hpp"  
+#include "opencv2/opencv.hpp"
+#include "opencv2/imgproc.hpp"
+#include "opencv2/core/types_c.h"
+#include "opencv2/imgproc/imgproc_c.h"
+#include "cassert"  
+#include "vector" 
 
 int main(int argc, char* argv[])
 {
@@ -1491,15 +1491,15 @@ void adaptiveThreshold(InoutArray src,OutputArray dst,double maxValue,int adapti
 
 <p><code>src</code>表示源图像数组；<br><code>dst</code>表示输出图像组；<br><code>maxValue</code>表示预设满足条件最大值；<br><code>adaptiveMethod</code>表示自适应阈值算法选择 <code>ADAPTIVE_THRESH_MEAN_C</code>或<code>ADAPTIVE_THRESH_GAUSSIAN_C</code>;<br><code>ADAPTIVE_THRESH_MEAN_C</code>的计算方法是计算出邻域的平均值再减去第七个参数double C的值<br><code>ADAPTIVE_THRESH_GAUSSIAN_C</code>的计算方法是计算出邻域的高斯均匀值再减去第七个参数<code>double C</code>的值<br><code>thresholdType</code>表示阈值类型<code>THRESH_BINARY</code>或<code>THRESH_BINARY_INV</code>;<br><code>blockSize</code>表示邻域块大小，用来计算区域阈值，一般选择3、5、7……;<br>参数<code>C</code>表示常数，它是一个从均匀或加权均值提取的常数，可以是负数。</p>
 <pre class="prettyprint lang-c++">
-#include < iostream>  
-#include < opencv2/core/core.hpp>  
-#include < opencv2/highgui/highgui.hpp>  
-#include < opencv2/opencv.hpp>
-#include < opencv2/imgproc.hpp>
-#include < opencv2/core/types_c.h>
-#include < opencv2/imgproc/imgproc_c.h>
-#include < cassert>  
-#include < vector> 
+#include "iostream"  
+#include "opencv2/core/core.hpp"  
+#include "opencv2/highgui/highgui.hpp"  
+#include "opencv2/opencv.hpp"
+#include "opencv2/imgproc.hpp"
+#include "opencv2/core/types_c.h"
+#include "opencv2/imgproc/imgproc_c.h"
+#include "cassert"  
+#include "vector" 
 
 int main(int argc, char* argv[])
 {
@@ -1534,15 +1534,15 @@ int main(int argc, char* argv[])
 
 <p>参考代码：</p>
 <pre class="prettyprint lang-c++">
-#include < iostream>  
-#include < opencv2/core/core.hpp>  
-#include < opencv2/highgui/highgui.hpp>  
-#include < opencv2/opencv.hpp>
-#include < opencv2/imgproc.hpp>
-#include < opencv2/core/types_c.h>
-#include < opencv2/imgproc/imgproc_c.h>
-#include < cassert>  
-#include < vector> 
+#include "iostream"  
+#include "opencv2/core/core.hpp"  
+#include "opencv2/highgui/highgui.hpp"  
+#include "opencv2/opencv.hpp"
+#include "opencv2/imgproc.hpp"
+#include "opencv2/core/types_c.h"
+#include "opencv2/imgproc/imgproc_c.h"
+#include "cassert"  
+#include "vector" 
 
 int main(int argc, char* argv)
 {
@@ -1571,15 +1571,15 @@ int main(int argc, char* argv)
 </li></ul>
 <h3 id="9-2-">9.2 图像膨胀</h3>
 <pre class="prettyprint lang-c++">
-#include < iostream>  
-#include < opencv2/core/core.hpp>  
-#include < opencv2/highgui/highgui.hpp>  
-#include < opencv2/opencv.hpp>
-#include < opencv2/imgproc.hpp>
-#include < opencv2/core/types_c.h>
-#include < opencv2/imgproc/imgproc_c.h>
-#include < cassert>  
-#include < vector> 
+#include "iostream"  
+#include "opencv2/core/core.hpp"  
+#include "opencv2/highgui/highgui.hpp"  
+#include "opencv2/opencv.hpp"
+#include "opencv2/imgproc.hpp"
+#include "opencv2/core/types_c.h"
+#include "opencv2/imgproc/imgproc_c.h"
+#include "cassert"  
+#include "vector" 
 
 int main(int argc, char* argv)
 {
@@ -1617,15 +1617,15 @@ int main(int argc, char* argv)
 <center><img src="imgs\Rebert.jpg" alt=""></center>
 
 <pre class="prettyprint lang-c++">
-#include < iostream>  
-#include < opencv2/core/core.hpp>  
-#include < opencv2/highgui/highgui.hpp>  
-#include < opencv2/opencv.hpp>
-#include < opencv2/imgproc.hpp>
-#include < opencv2/core/types_c.h>
-#include < opencv2/imgproc/imgproc_c.h>
-#include < cassert>  
-#include < vector> 
+#include "iostream"  
+#include "opencv2/core/core.hpp"  
+#include "opencv2/highgui/highgui.hpp"  
+#include "opencv2/opencv.hpp"
+#include "opencv2/imgproc.hpp"
+#include "opencv2/core/types_c.h"
+#include "opencv2/imgproc/imgproc_c.h"
+#include "cassert"  
+#include "vector" 
 
 int main(int argc, char* argv)
 {
@@ -1655,15 +1655,15 @@ int main(int argc, char* argv)
 <center><img src="imgs\Sobel.jpg" alt=""></center>
 
 <pre class="prettyprint lang-c++">
-#include < iostream>  
-#include < opencv2/core/core.hpp>  
-#include < opencv2/highgui/highgui.hpp>  
-#include < opencv2/opencv.hpp>
-#include < opencv2/imgproc.hpp>
-#include < opencv2/core/types_c.h>
-#include < opencv2/imgproc/imgproc_c.h>
-#include < cassert>  
-#include < vector> 
+#include "iostream"  
+#include "opencv2/core/core.hpp"  
+#include "opencv2/highgui/highgui.hpp"  
+#include "opencv2/opencv.hpp"
+#include "opencv2/imgproc.hpp"
+#include "opencv2/core/types_c.h"
+#include "opencv2/imgproc/imgproc_c.h"
+#include "cassert"  
+#include "vector" 
 
 int main(int argc, char* argv)
 {
@@ -1702,15 +1702,15 @@ int main(int argc, char* argv)
 <center><img src="imgs\Scharr.jpg" alt=""></center>
 
 <pre class="prettyprint lang-c++">
-#include < iostream>  
-#include < opencv2/core/core.hpp>  
-#include < opencv2/highgui/highgui.hpp>  
-#include < opencv2/opencv.hpp>
-#include < opencv2/imgproc.hpp>
-#include < opencv2/core/types_c.h>
-#include < opencv2/imgproc/imgproc_c.h>
-#include < cassert>  
-#include < vector> 
+#include "iostream"  
+#include "opencv2/core/core.hpp"  
+#include "opencv2/highgui/highgui.hpp"  
+#include "opencv2/opencv.hpp"
+#include "opencv2/imgproc.hpp"
+#include "opencv2/core/types_c.h"
+#include "opencv2/imgproc/imgproc_c.h"
+#include "cassert"  
+#include "vector" 
 
 int main(int argc, char* argv)
 {
@@ -1748,15 +1748,15 @@ int main(int argc, char* argv)
 <center><img src="imgs\Laplacian.jpg" alt=""></center>
 
 <pre class="prettyprint lang-c++">
-#include < iostream>  
-#include < opencv2/core/core.hpp>  
-#include < opencv2/highgui/highgui.hpp>  
-#include < opencv2/opencv.hpp>
-#include < opencv2/imgproc.hpp>
-#include < opencv2/core/types_c.h>
-#include < opencv2/imgproc/imgproc_c.h>
-#include < cassert>  
-#include < vector> 
+#include "iostream"  
+#include "opencv2/core/core.hpp"  
+#include "opencv2/highgui/highgui.hpp"  
+#include "opencv2/opencv.hpp"
+#include "opencv2/imgproc.hpp"
+#include "opencv2/core/types_c.h"
+#include "opencv2/imgproc/imgproc_c.h"
+#include "cassert"  
+#include "vector" 
 
 int main(int argc, char* argv)
 {
@@ -1790,15 +1790,15 @@ int main(int argc, char* argv)
 
 <pre class="prettyprint lang-c++">
 
-#include < iostream>  
-#include < opencv2/core/core.hpp>  
-#include < opencv2/highgui/highgui.hpp>  
-#include < opencv2/opencv.hpp>
-#include < opencv2/imgproc.hpp>
-#include < opencv2/core/types_c.h>
-#include < opencv2/imgproc/imgproc_c.h>
-#include < cassert>  
-#include < vector> 
+#include "iostream"  
+#include "opencv2/core/core.hpp"  
+#include "opencv2/highgui/highgui.hpp"  
+#include "opencv2/opencv.hpp"
+#include "opencv2/imgproc.hpp"
+#include "opencv2/core/types_c.h"
+#include "opencv2/imgproc/imgproc_c.h"
+#include "cassert"  
+#include "vector" 
 
 int main(int argc, char* argv)
 {

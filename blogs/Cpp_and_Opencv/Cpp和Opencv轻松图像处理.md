@@ -13,7 +13,7 @@
 
 ------------------------------------------------------
 ## 0. 常用库
-<pre class="prettyprint lang-c">
+```c++
 #include < iostream>  
 #include < opencv2/core/core.hpp>  
 #include < opencv2/highgui/highgui.hpp>  
@@ -24,7 +24,7 @@
 #include < cassert>
 #include < vector> 
 
-</pre>
+```
 
 ## 1. 图像读入、显示与保存
 
